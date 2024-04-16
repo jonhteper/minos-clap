@@ -1,0 +1,9 @@
+[package]
+name = "minos-cli-test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+minos = {git = "ssh://git@github.com/jonhteper/minos.git", branch = "main"}
+minos-clap = {path = "../"}
+clap = {version = "4.5.4", features = ["derive"]}

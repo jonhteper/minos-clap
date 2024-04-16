@@ -1,0 +1,108 @@
+syntax = 0.16;
+
+resource File {
+    env DEFAULT {
+        policy  {
+            allow = ["read", "write"];
+            
+            rule {
+                actor.type = User;
+                resource.owner = actor.id;
+            }
+
+            rule {
+                actor.type = User;
+                actor.groups *= resource.owner;
+            }
+        }
+
+        policy {
+            allow = ["read"];
+
+            rule {
+                actor.type = User;
+                actor.groups *= resource.type;
+            }
+        }
+
+        policy {
+            allow = ["delete"];
+
+            rule  {
+                actor.type = User;
+                actor.roles *= "admin";
+            }
+        }
+    }
+    
+    env TEST {
+        policy {
+            allow = ["create", "read", "write", "delete"];
+
+            rule {
+                actor.type = User;
+            }
+        }
+    }
+}
+
+resource Application {
+    env STD {
+        policy {
+            allow = ["install", "update", "uninstall"];
+
+            rule {
+                actor.type = User;
+                actor.roles *= "application manager";
+            }
+        }
+
+        policy {
+            allow = ["execute"];
+
+            rule {
+                actor.type = User;
+                resource.status = installed;
+            }
+        }
+    }
+
+    env ROOT {
+        policy {
+            allow = ["install", "update", "uninstall"];
+
+            rule {
+                actor.type = SuperUser;
+            }
+        }
+
+        policy {
+            allow = ["execute"];
+
+            rule {
+                actor.type = SuperUser;
+                resource.status = installed;
+            }
+        }
+    }
+}
+
+resource Application {
+    id = "app.application-store";
+
+    policy {
+        allow = ["update"];
+
+        rule {
+            actor.type = SuperUser;
+        }
+    }
+
+    policy {
+        allow = ["execute"];
+
+        rule {
+            actor.type = User;
+        }
+    }
+}
