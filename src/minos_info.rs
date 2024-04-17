@@ -20,6 +20,5 @@ impl<'a> MinosInfo<'a> {
         println!("id: {}", self.container.id());
         println!("description: {}", self.container.description());
         println!("paths: {:?}", self.paths());
-        println!("engine_info: {:?}", self.container.engine().info());
     }
 }
