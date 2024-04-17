@@ -2,6 +2,10 @@
 
 Simple clap commands for minos containers.
 
+## Commands
+* ls: to list resources and policies
+* info: to show container info
+
 ## Usage: 
 ```rust
 use std::{env, path::PathBuf};
