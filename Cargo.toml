@@ -4,6 +4,9 @@ name = "minos-clap"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+lto = true
+
 [dependencies]
 minos = {git = "ssh://git@github.com/jonhteper/minos.git", branch = "main"}
 clap = {version = "4.5.4", features = ["derive"]}

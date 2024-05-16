@@ -1,15 +1,18 @@
 use clap::Parser;
-use minos::engine::Criteria;
+use minos::{
+    engine::Criteria,
+    text_repr::{environment_text_repr::EnvironmentsFormatter, to_text_repr::ToTextRepr},
+};
 
 use crate::Container;
 
 #[derive(Debug, Parser)]
 pub struct PoliciesArgs {
-    /// Set resource's type.
+    /// Set resource's type to show policies by Environment.
     #[clap(long = "type")]
     resource_type: Option<String>,
 
-    /// Set attributed resource's id.
+    /// Set attributed resource's id to show policies by Environment.
     #[clap(long = "id")]
     resource_id: Option<String>,
 
@@ -32,10 +35,14 @@ impl PoliciesArgs {
                 return;
             }
 
-            let policies = info.policies(Criteria::ResourceId(resource_id));
-            for policy in policies {
-                println!("{:?}", policy);
+            let maybe_envs = info.environments(Criteria::ResourceId(resource_id));
+            if maybe_envs.is_none() {
+                return;
             }
+
+            let envs = maybe_envs.unwrap();
+            let policies_text_repr = EnvironmentsFormatter::new(envs).to_text_repr();
+            println!("{}", policies_text_repr);
 
             return;
         }
@@ -49,10 +56,14 @@ impl PoliciesArgs {
                 return;
             }
 
-            let policies = info.policies(Criteria::ResourceType(resource_type));
-            for policy in policies {
-                println!("{:?}", policy);
+            let maybe_envs = info.environments(Criteria::ResourceType(resource_type));
+            if maybe_envs.is_none() {
+                return;
             }
+            let envs = maybe_envs.unwrap();
+
+            let policies_text_repr = EnvironmentsFormatter::new(envs).to_text_repr();
+            println!("{}", policies_text_repr);
 
             return;
         }
